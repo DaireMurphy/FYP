@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #5f788a;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+</style>
+<script>
+  
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    csvFile = new Blob([csv], {type: "text/csv;"});
+
+    downloadLink = document.createElement("a");
+
+    downloadLink.download = filename;
+
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    downloadLink.style.display = "none";
+
+    document.body.appendChild(downloadLink);
+
+    downloadLink.click();
+}
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+ 
+          row.push(cols[1].innerText);
+          var x = row.map(s => s.slice(1));
+
+        
+        csv.push(x.join(","));        
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+}
+</script>
+<form action="" method="POST">
+<input type="hidden" name="query" value="{{ str_query }}"/>
+<input type="hidden" name="keywords" value="{{ str_keywords }}"/>
+<input type="hidden" name="numb" value="{{ number }}"/>
+
+<table id="myTable" class="display" style="width:75%">
+  <tr>
+    <th align="right"></th>
+    <th align="left">&nbsp;Lexicon for seed word "{{ query }}"</th>
+    <th align="center">Remove</th>
+  </tr>
+{% for i in range(0, number) %}
+  <tr>
+    <td align="right" width="7%">{{ loop.index }}.</td>
+    <td align="left" width="73%">&nbsp;{{ keywords[i] }}</td>
+    <td align="center">
+      <input type="checkbox" name="check" value="{{ keywords[i] }}"/>
+    </label>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+<br>
+<button class="button">Remove Unwanted Words</button>
+</form>
+<button onclick="exportTableToCSV('lexiconwords.csv')">Download CSV of Recommended Words</button>
+{% endblock content %}
