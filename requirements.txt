@@ -19,7 +19,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.1
 jmespath==0.9.5
 MarkupSafe==1.1.1
-numpy==1.18.2
+numpy==1.22.0
 pandas==1.0.3
 protobuf==3.11.3
 pyasn1==0.4.8
